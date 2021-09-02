@@ -1,17 +1,17 @@
 import { Tag } from "antd";
 import { useDrag, useDrop } from "react-dnd";
-import React, { useRef } from "react";
+import { useRef } from "react";
 
-// interface PropsType {
-//   id: string,
-//   name: string,
-//   index: number,
-//   moveTag: (dragIndex: number, hoverIndex: number) => {},
-//   removeTag: (tagId: string) => {},
-// }
+interface PropsType {
+  id: string,
+  name: string,
+  index: number,
+  moveTag: (dragIndex: number, hoverIndex: number) => void,
+  removeTag: (tagId: string) => void,
+}
 
-export default function DraggableTag({ id, name, index, moveTag, removeTag }) {
-  const ref = useRef(null);
+export default function DraggableTag({ id, name, index, moveTag, removeTag }: PropsType) {
+  const ref = useRef<HTMLSpanElement>(null);
 
   const [{ handlerId }, drop] = useDrop({
     accept: "tag",
@@ -20,7 +20,7 @@ export default function DraggableTag({ id, name, index, moveTag, removeTag }) {
         handlerId: monitor.getHandlerId()
       };
     },
-    hover(item, monitor) {
+    hover(item: { index: number }, monitor) {
       if (!ref.current) {
         return;
       }
@@ -36,7 +36,7 @@ export default function DraggableTag({ id, name, index, moveTag, removeTag }) {
       const hoverMiddleX =
         (hoverBoundingRect.right - hoverBoundingRect.left) / 2;
       // Determine mouse position
-      const clientOffset = monitor.getClientOffset();
+      const clientOffset = monitor.getClientOffset() || { x: 0 };
       // Get pixels to the top
       const hoverClientX = clientOffset.x - hoverBoundingRect.left;
       // Only perform the move when the mouse has crossed half of the items height

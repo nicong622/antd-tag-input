@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import React, { useState, useCallback } from "react";
 import { Input } from "antd";
 import DraggableTag from "./draggable-tag";
 import update from "immutability-helper";
@@ -6,13 +6,13 @@ import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import './style.css'
 
-export default function TagInput() {
-  const [tagList, setList] = useState([
-    { name: "tag1", id: "1" },
-    { name: "tag2", id: "2" },
-    { name: "tag3", id: "3" },
-    { name: "tag4", id: "4" }
-  ]);
+export interface TagType {
+  name: string,
+  id: string
+}
+
+export default function TagInput({ tags }: { tags: TagType[] }) {
+  const [tagList, setList] = useState<TagType[]>(tags || []);
   const [inputValue, setInputVal] = useState('')
 
   const moveTag = useCallback(
@@ -41,11 +41,11 @@ export default function TagInput() {
     setInputVal('')
   }
 
-  const onChange = useCallback((e) => {
+  function onChange (e: { target: HTMLInputElement }) {
     setInputVal(e.target.value)
-  })
+  }
 
-  const removeTag = (tagId) => {
+  const removeTag = (tagId: string) => {
     setList(tagList.filter((tag) => tag.id !== tagId));
   };
 
